@@ -1,4 +1,5 @@
 return {
+  -- Ensure xmlformat is installed via Mason
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
@@ -9,6 +10,7 @@ return {
     end,
   },
 
+  -- Configure Conform to use xmlformat
   {
     "stevearc/conform.nvim",
     opts = function(_, opts)
@@ -19,18 +21,16 @@ return {
         command = "xmlformat",
         args = {
           "--indent",
-          "4", -- 4 spaces
+          "4",
           "--indent-char",
-          " ", -- use spaces
-          "-", -- read from stdin
+          " ",
+          "-",
         },
         stdin = true,
       }
 
       opts.formatters_by_ft.xml = { "xmlformatter" }
       opts.formatters_by_ft.mxml = { "xmlformatter" }
-
-      return opts
     end,
   },
 }
