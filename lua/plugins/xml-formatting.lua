@@ -1,5 +1,4 @@
 return {
-  -- Ensure xmlformat is installed via Mason
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
@@ -10,7 +9,6 @@ return {
     end,
   },
 
-  -- Configure Conform to use xmlformat
   {
     "stevearc/conform.nvim",
     opts = function(_, opts)
@@ -24,6 +22,9 @@ return {
           "4",
           "--indent-char",
           " ",
+          "--blanks",
+          "--disable-correction",
+          "--eof-newline",
           "-",
         },
         stdin = true,
