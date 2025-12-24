@@ -15,30 +15,87 @@ return {
     },
 
     keys = {
+
       {
         "<leader>ac",
         function()
           require("codecompanion").chat()
         end,
-        desc = "AI Chat (CodeCompanion v17)",
+        desc = "AI: Open chat",
         mode = { "n", "v" },
       },
 
       {
-        "<leader>ae",
+        "<leader>ax",
         function()
-          require("codecompanion").actions({})
+          require("codecompanion").chat({
+            prompt = table.concat({
+              "Explain the following code.",
+              "Focus on intent, control flow, and edge cases.",
+              "Assume I am an experienced backend developer.",
+              "",
+              "Code:",
+              "```",
+              vim.fn.getreg("v"),
+              "```",
+            }, "\n"),
+          })
         end,
-        desc = "AI Inline Actions (CodeCompanion v17)",
-        mode = { "n", "v" },
+        desc = "AI: Explain selected code",
+        mode = "v",
+      },
+      {
+        "<leader>ai",
+        function()
+          require("codecompanion").inline({
+            prompt = table.concat({
+              "Improve the following code.",
+              "Preserve behavior.",
+              "Improve readability, naming, and structure.",
+              "Do not add abstractions unless clearly beneficial.",
+            }, "\n"),
+          })
+        end,
+        desc = "AI: Improve selected code",
+        mode = "v",
       },
 
       {
         "<leader>ar",
         function()
-          require("codecompanion").inline({})
+          require("codecompanion").chat({
+            prompt = table.concat({
+              "Review the following code.",
+              "Call out potential bugs, edge cases, and design issues.",
+              "Be concise and concrete.",
+              "",
+              "Code:",
+              "```",
+              vim.fn.getreg("v"),
+              "```",
+            }, "\n"),
+          })
         end,
-        desc = "AI Inline Rewrite (CodeCompanion v17)",
+        desc = "AI: Review selected code",
+        mode = "v",
+      },
+      {
+        "<leader>at",
+        function()
+          require("codecompanion").chat({
+            prompt = table.concat({
+              "Write tests for the following code.",
+              "Use the project's existing testing style if possible.",
+              "Focus on behavior and edge cases.",
+              "",
+              "Code:",
+              "```",
+              vim.fn.getreg("v"),
+              "```",
+            }, "\n"),
+          })
+        end,
+        desc = "AI: Generate tests for selection",
         mode = "v",
       },
       {
@@ -108,7 +165,7 @@ return {
             name = "qwen",
             schema = {
               model = {
-                default = "qwen2.5-coder:7b",
+                default = "qwen2.5-coder:3b",
               },
             },
           })
