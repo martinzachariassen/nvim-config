@@ -3,18 +3,18 @@ return {
   opts = function(_, opts)
     local cmp = require("cmp")
 
-    opts.sources = {
+    -- =====================================================
+    -- SOURCES (IntelliSense-like priority)
+    -- =====================================================
+    opts.sources = cmp.config.sources({
       { name = "nvim_lsp", priority = 1000 },
       { name = "path",     priority = 250 },
       { name = "buffer",   priority = 200 },
-    }
+    })
 
-    opts.snippet = {
-      expand = function()
-        -- intentionally empty
-      end,
-    }
-
+    -- =====================================================
+    -- SORTING (stable, IDE-like)
+    -- =====================================================
     opts.sorting = {
       priority_weight = 2,
       comparators = {
@@ -28,16 +28,21 @@ return {
       },
     }
 
-    opts.formatting = {
+    -- =====================================================
+    -- FORMATTING (clean menu, keep LazyVim icons)
+    -- =====================================================
+    opts.formatting = vim.tbl_extend("force", opts.formatting or {}, {
       fields = { "kind", "abbr", "menu" },
       format = function(entry, item)
         item.menu = ({
           nvim_lsp = "[LSP]",
-          buffer = "[BUF]",
-          path = "[PATH]",
+          buffer   = "[BUF]",
+          path     = "[PATH]",
         })[entry.source.name]
         return item
       end,
-    }
+    })
+
+    return opts
   end,
 }
