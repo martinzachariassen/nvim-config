@@ -44,6 +44,7 @@ return {
         desc = "AI: Explain selected code",
         mode = "v",
       },
+
       {
         "<leader>ai",
         function()
@@ -79,6 +80,7 @@ return {
         desc = "AI: Review selected code",
         mode = "v",
       },
+
       {
         "<leader>at",
         function()
@@ -98,17 +100,17 @@ return {
         desc = "AI: Generate tests for selection",
         mode = "v",
       },
+
+      -- Generate Conventional Commit via git diff
       {
         "<leader>aG",
         function()
           local diff = vim.fn.system("git diff --cached; git diff")
-
           if diff == "" then
             vim.notify("No git diff found", vim.log.levels.WARN)
             return
           end
 
-          -- Guard against massive diffs
           if #diff > 50000 then
             vim.notify("Git diff too large for LLM context", vim.log.levels.WARN)
             return
@@ -137,12 +139,30 @@ return {
               diff,
               "```",
             }, "\n"),
+            adapter = "qwen_big", -- <-- ensure big model handles diff
           })
         end,
         desc = "CodeCompanion: Conventional Commit from git diff",
         mode = "n",
       },
+
+      -- optional quick toggle hotkeys
+      {
+        "<leader>am3",
+        function()
+          vim.cmd("CodeCompanionSwitchAdapter qwen_small")
+        end,
+        desc = "AI: Switch → small model (3B)",
+      },
+      {
+        "<leader>am1",
+        function()
+          vim.cmd("CodeCompanionSwitchAdapter qwen_big")
+        end,
+        desc = "AI: Switch → big model (14B)",
+      },
     },
+
     opts = {
       display = {
         chat = {
@@ -159,25 +179,32 @@ return {
         },
       },
 
+      -- define two model adapters
       adapters = {
-        qwen = function()
+        qwen_big = function()
           return require("codecompanion.adapters").extend("ollama", {
-            name = "qwen",
-            schema = {
-              model = {
-                default = "qwen2.5-coder:3b",
-              },
-            },
+            name = "qwen_big",
+            schema = { model = { default = "qwen2.5-coder:14b" } },
+          })
+        end,
+        qwen_small = function()
+          return require("codecompanion.adapters").extend("ollama", {
+            name = "qwen_small",
+            schema = { model = { default = "qwen2.5-coder:3b" } },
           })
         end,
       },
 
+      -- choose model by strategy: use big where it matters
       strategies = {
         chat = {
-          adapter = "qwen",
+          adapter = "qwen_big", -- full reasoning, reviews, questions
         },
         inline = {
-          adapter = "qwen",
+          adapter = "qwen_small", -- fast edits / rename / formatting
+        },
+        task = {
+          adapter = "qwen_big", -- long instructions, git diff tasks
         },
       },
 
