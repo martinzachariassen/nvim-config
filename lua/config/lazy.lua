@@ -1,78 +1,57 @@
 -- ====================================================================
--- Bootstrap lazy.nvim
+-- Bootstrap lazy.nvim and load LazyVim + your plugins
 -- ====================================================================
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
-if not vim.uv.fs_stat(lazypath) then
-  vim.fn.system({
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local uv = vim.uv or vim.loop
+
+if not uv.fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({
     "git",
     "clone",
     "--filter=blob:none",
     "--branch=stable",
-    "https://github.com/folke/lazy.nvim.git",
+    lazyrepo,
     lazypath,
   })
+
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out .. "\n",                    "WarningMsg" },
+      { "Press any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 
 vim.opt.rtp:prepend(lazypath)
 
 -- ====================================================================
--- Setup lazy.nvim + LazyVim
+-- lazy.nvim setup
 -- ====================================================================
 require("lazy").setup({
   spec = {
-
-    --------------------------------------------------------------------
-    -- Core LazyVim + base plugins
-    --------------------------------------------------------------------
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-    --------------------------------------------------------------------
-    -- Language Extras
-    --------------------------------------------------------------------
-    { import = "lazyvim.plugins.extras.lang.java" },
-    { import = "lazyvim.plugins.extras.lang.python" },
-    { import = "lazyvim.plugins.extras.lang.typescript" },
-    { import = "lazyvim.plugins.extras.lang.docker" },
-    { import = "lazyvim.plugins.extras.lang.yaml" },
-    { import = "lazyvim.plugins.extras.lang.helm" },
-    { import = "lazyvim.plugins.extras.lang.json" },
-
-    --------------------------------------------------------------------
-    -- Tooling / Workflow Extras
-    --------------------------------------------------------------------
-    { import = "lazyvim.plugins.extras.util.project" },
-    { import = "lazyvim.plugins.extras.dap.core" },
-    { import = "lazyvim.plugins.extras.test.core" },
-    { import = "lazyvim.plugins.extras.linting.eslint" },
-    { import = "lazyvim.plugins.extras.editor.inc-rename" },
-    { import = "lazyvim.plugins.extras.editor.neo-tree" },
-    { import = "lazyvim.plugins.extras.coding.yanky" },
-    { import = "lazyvim.plugins.extras.coding.mini-surround" },
-    { import = "lazyvim.plugins.extras.ui.treesitter-context" },
-    { import = "lazyvim.plugins.extras.coding.nvim-cmp" },
-
-    --------------------------------------------------------------------
-    -- User plugins (everything in lua/plugins/)
-    --------------------------------------------------------------------
     { import = "plugins" },
   },
 
   defaults = {
-    lazy = false, -- user plugins load immediately
-    -- version = "*", -- not recommended
-    -- version = false, -- always use latest commit
+    lazy = false,
+    version = false, -- use latest git commit (recommended by LazyVim docs)
   },
 
   install = {
-    missing = true,
     colorscheme = { "tokyonight", "habamax" },
   },
 
   checker = {
     enabled = true,
     notify = false,
-    frequency = 3600, -- check every hour
+    frequency = 3600,
   },
 
   change_detection = {
@@ -88,7 +67,6 @@ require("lazy").setup({
         "tohtml",
         "tutor",
         "zipPlugin",
-        -- "netrwPlugin", -- enable if you want netrw disabled
       },
     },
   },

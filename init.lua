@@ -1,7 +1,6 @@
--- Optional: speed up startup on Neovim 0.9+
-if vim.loader then
-  vim.loader.enable()
-end
-
--- Bootstrap LazyVim + plugins via lua/config/lazy.lua
+-- ====================================================================
+-- Entry point
+-- ====================================================================
+-- Keep init.lua tiny. Bootstrapping + plugin spec lives in lua/config/lazy.lua.
+-- Everything else goes in lua/config/* and lua/plugins/*.
 require("config.lazy")
