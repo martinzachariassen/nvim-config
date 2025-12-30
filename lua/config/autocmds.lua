@@ -1,36 +1,22 @@
 -- ====================================================================
 -- Autocmds
 -- ====================================================================
--- This file is loaded automatically by LazyVim.
--- Put editor automation here (not plugin specs).
---
--- Tips:
---   - Use augroups with { clear = true } so re-sourcing doesn't duplicate autocmds.
---   - Prefer buffer-local changes in ftplugin files for filetype-specific behavior.
--- ====================================================================
 
 local api = vim.api
 
--- --------------------------------------------------------------------
--- Helper: create/reuse augroups cleanly
--- --------------------------------------------------------------------
 local function augroup(name)
   return api.nvim_create_augroup(name, { clear = true })
 end
 
 -- --------------------------------------------------------------------
--- Re-apply custom highlight tweaks (transparency)
+-- Transparency / highlight overrides
 -- --------------------------------------------------------------------
--- Your transparency/highlight overrides should live in:
---   lua/config/transparency.lua
--- and expose a `setup()` that registers ColorScheme re-apply logic.
--- If the module doesn't exist yet, this will just no-op safely.
 pcall(function()
   require("config.transparency").setup()
 end)
 
 -- --------------------------------------------------------------------
--- Highlight on yank (nice UX feedback)
+-- Highlight on yank
 -- --------------------------------------------------------------------
 api.nvim_create_autocmd("TextYankPost", {
   group = augroup("UserYankHighlight"),
@@ -41,19 +27,18 @@ api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- --------------------------------------------------------------------
--- Resize splits when the terminal window is resized
+-- Resize splits on terminal resize
 -- --------------------------------------------------------------------
 api.nvim_create_autocmd("VimResized", {
   group = augroup("UserResizeSplits"),
   callback = function()
-    -- keep splits proportional
     vim.cmd("tabdo wincmd =")
   end,
   desc = "Keep splits sized after terminal resize",
 })
 
 -- --------------------------------------------------------------------
--- Close certain "utility" buffers with q
+-- Close certain utility buffers with q
 -- --------------------------------------------------------------------
 api.nvim_create_autocmd("FileType", {
   group = augroup("UserCloseWithQ"),
@@ -82,13 +67,12 @@ api.nvim_create_autocmd("FileType", {
 })
 
 -- --------------------------------------------------------------------
--- Fix conceallevel for JSON-like files
+-- JSON readability: disable conceal
 -- --------------------------------------------------------------------
--- Some setups/plugins set conceal which can make JSON harder to read.
 api.nvim_create_autocmd("FileType", {
   group = augroup("UserJsonConceal"),
   pattern = { "json", "jsonc", "json5" },
-  callback = function(event)
+  callback = function()
     vim.opt_local.conceallevel = 0
     vim.opt_local.concealcursor = ""
   end,
@@ -96,19 +80,25 @@ api.nvim_create_autocmd("FileType", {
 })
 
 -- --------------------------------------------------------------------
--- Remove trailing whitespace on save (safe version)
+-- Trim trailing whitespace on save (safe)
 -- --------------------------------------------------------------------
--- This preserves your cursor position and won't touch binary buffers.
 api.nvim_create_autocmd("BufWritePre", {
   group = augroup("UserTrimWhitespace"),
   callback = function(event)
-    -- skip special buffers
+    -- Skip special/unmodifiable buffers
     if vim.bo[event.buf].buftype ~= "" then
+      return
+    end
+    if not vim.bo[event.buf].modifiable then
+      return
+    end
+
+    -- Skip diff buffers (whitespace is meaningful there)
+    if vim.wo.diff then
       return
     end
 
     local view = vim.fn.winsaveview()
-    -- only trailing whitespace, not full formatting
     vim.cmd([[silent! %s/\s\+$//e]])
     vim.fn.winrestview(view)
   end,

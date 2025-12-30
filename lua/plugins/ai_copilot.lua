@@ -1,8 +1,11 @@
+-- ====================================================================
+-- AI: GitHub Copilot (suggestions)
+-- ====================================================================
+
 return {
   {
     "zbirenbaum/copilot.lua",
     event = "InsertEnter",
-
     opts = {
       suggestion = {
         enabled = true,
@@ -14,14 +17,7 @@ return {
           dismiss = "<C-x>",
         },
       },
-
-      panel = {
-        enabled = false, -- No Copilot chat UI, avoids conflicts with CodeCompanion
-      },
+      panel = { enabled = false },
     },
-
-    config = function(_, opts)
-      require("copilot").setup(opts)
-    end,
   },
 }

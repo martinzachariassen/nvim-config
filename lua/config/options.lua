@@ -1,8 +1,12 @@
 -- ====================================================================
 -- Options
 -- ====================================================================
--- These are global defaults. Filetype-specific settings belong in after/ftplugin/*.
--- LazyVim loads your lua/config/options.lua automatically. :contentReference[oaicite:3]{index=3}
+-- Global defaults only. Filetype-specific settings belong in:
+--   ~/.config/nvim/after/ftplugin/<ft>.lua
+
+-- Disable unused providers (silences :checkhealth vim.provider warnings)
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
 
 local opt = vim.opt
 
@@ -14,7 +18,7 @@ opt.shiftwidth = 4
 opt.tabstop = 4
 opt.softtabstop = 4
 opt.smartindent = true
-opt.shiftround = true -- round indent to shiftwidth
+opt.shiftround = true
 
 -- --------------------------------------------------------------------
 -- UI / layout
@@ -49,6 +53,9 @@ opt.swapfile = false
 opt.backup = false
 opt.writebackup = false
 
+-- Allows switching buffers without saving every time
+opt.hidden = true
+
 -- --------------------------------------------------------------------
 -- Timing / responsiveness
 -- --------------------------------------------------------------------
@@ -67,6 +74,7 @@ opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
 opt.mouse = "a"
 opt.confirm = true
 
+-- Subtle whitespace visibility
 opt.list = true
 opt.listchars = {
   tab = "» ",

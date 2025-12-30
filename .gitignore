@@ -1,0 +1,107 @@
+# =====================================================================
+# Neovim config repo (.config/nvim)
+# =====================================================================
+# Goal: commit your config (lua/, init.lua, lazyvim.json, stylua.toml, etc.)
+#       but ignore runtime state, caches, logs, downloaded plugins, and OS cruft.
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# OS / editor junk
+# ---------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# ---------------------------------------------------------------------
+# Neovim runtime (DO NOT COMMIT)
+# - lazy.nvim clones plugins into: stdpath("data") = ~/.local/share/nvim
+# - state/logs go to:                ~/.local/state/nvim
+# - cache goes to:                   ~/.cache/nvim
+# This repo may still accidentally create local artifacts (below).
+# ---------------------------------------------------------------------
+
+# Local runtime dirs if they end up inside the repo for any reason
+.cache/
+.state/
+.data/
+tmp/
+
+# Neovim swap/backup/undo if you ever enable them inside repo
+*.swp
+*.swo
+*.swn
+*~
+*.bak
+*.tmp
+*.orig
+*.rej
+
+# Session / view / shada files (only ignore if they are stored in repo)
+Session.vim
+Sessionx.vim
+Shada*
+*.shada
+view/
+undo/
+backup/
+swap/
+
+# ---------------------------------------------------------------------
+# Plugin managers / compiled output (shouldn't live in repo)
+# ---------------------------------------------------------------------
+# If you ever point runtimepath into the repo or use local installs
+lazy/
+packer_compiled.lua
+plugin/packer_compiled.lua
+
+# ---------------------------------------------------------------------
+# LazyVim / Lazy (keep lockfile!)
+# ---------------------------------------------------------------------
+# Keep: lazy-lock.json
+# Ignore: generated cache files (rarely in repo)
+lazyvim.local.json
+lazyvim-cache/
+lazyvim/
+
+# ---------------------------------------------------------------------
+# LSP / tooling caches (sometimes end up in repo depending on setup)
+# ---------------------------------------------------------------------
+# lua-language-server / sumneko
+.lua_ls/
+# jdtls workspace/config (if configured to be relative)
+jdtls-workspace/
+jdtls-config/
+# general LSP logs/caches
+lsp.log
+*.log
+
+# ---------------------------------------------------------------------
+# Treesitter compiled parsers (only if stored locally)
+# ---------------------------------------------------------------------
+parser/
+queries/
+
+# ---------------------------------------------------------------------
+# Formatter / tool caches
+# ---------------------------------------------------------------------
+conform.log
+stylua.log
+
+# ---------------------------------------------------------------------
+# Optional: ignore local-only config
+# ---------------------------------------------------------------------
+# Keep your real config in repo, but allow machine-specific overrides
+lua/config/local.lua
+lua/plugins/local.lua
+local.lua
+
+# ---------------------------------------------------------------------
+# If you use direnv
+# ---------------------------------------------------------------------
+.envrc
+.direnv/
+
+# ---------------------------------------------------------------------
+# If you use mise/asdf in repo (usually you don't for nvim config)
+# ---------------------------------------------------------------------
+.mise.toml
+.tool-versions

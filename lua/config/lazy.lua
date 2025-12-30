@@ -2,6 +2,10 @@
 -- Bootstrap lazy.nvim and load LazyVim + your plugins
 -- ====================================================================
 
+-- IMPORTANT: leader must be set before plugins/keymaps load.
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local uv = vim.uv or vim.loop
 
@@ -19,7 +23,7 @@ if not uv.fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out .. "\n",                    "WarningMsg" },
+      { out .. "\n", "WarningMsg" },
       { "Press any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -34,14 +38,17 @@ vim.opt.rtp:prepend(lazypath)
 -- ====================================================================
 require("lazy").setup({
   spec = {
+    -- Core LazyVim + defaults
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
+    -- Your plugin specs in ~/.config/nvim/lua/plugins/*.lua
     { import = "plugins" },
   },
 
   defaults = {
-    lazy = false,
-    version = false, -- use latest git commit (recommended by LazyVim docs)
+    -- Best practice with LazyVim: lazy-load by default; opt-out per plugin.
+    lazy = true,
+    version = false,
   },
 
   install = {
