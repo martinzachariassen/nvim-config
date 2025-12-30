@@ -1,11 +1,13 @@
+-- ====================================================================
+-- Formatting: XML (xmlformat via conform.nvim) + ensure tools in Mason
+-- ====================================================================
+
 return {
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, {
-        "xmlformatter",
-      })
+      vim.list_extend(opts.ensure_installed, { "xmlformatter" })
     end,
   },
 
@@ -15,7 +17,12 @@ return {
       opts.formatters = opts.formatters or {}
       opts.formatters_by_ft = opts.formatters_by_ft or {}
 
-      opts.formatters.xmlformatter = {
+      -- If the binary isn't available yet, don't register a broken formatter.
+      if vim.fn.executable("xmlformat") ~= 1 then
+        return
+      end
+
+      opts.formatters.xmlformat = {
         command = "xmlformat",
         args = {
           "--indent",
@@ -30,8 +37,8 @@ return {
         stdin = true,
       }
 
-      opts.formatters_by_ft.xml = { "xmlformatter" }
-      opts.formatters_by_ft.mxml = { "xmlformatter" }
+      opts.formatters_by_ft.xml = { "xmlformat" }
+      opts.formatters_by_ft.mxml = { "xmlformat" }
     end,
   },
 }

@@ -1,92 +1,80 @@
--- Global Neovim options for LazyVim
+-- ====================================================================
+-- Options
+-- ====================================================================
+-- Global defaults only. Filetype-specific settings belong in:
+--   ~/.config/nvim/after/ftplugin/<ft>.lua
+
+-- Disable unused providers (silences :checkhealth vim.provider warnings)
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 local opt = vim.opt
-local api = vim.api
 
------------------------------------------------------------
--- Indentation (defaults)
--- 4 spaces by default; overridden per filetype below
------------------------------------------------------------
-opt.expandtab = true -- tabs → spaces
-opt.shiftwidth = 4 -- spaces per indent level
-opt.tabstop = 4 -- how many spaces a <Tab> displays as
-opt.softtabstop = 4 -- how many spaces <Tab>/<BS> insert/remove
-opt.smartindent = true -- basic auto-indent for new lines
+-- --------------------------------------------------------------------
+-- Indentation: global defaults
+-- --------------------------------------------------------------------
+opt.expandtab = true
+opt.shiftwidth = 4
+opt.tabstop = 4
+opt.softtabstop = 4
+opt.smartindent = true
+opt.shiftround = true
 
------------------------------------------------------------
--- Indentation overrides by filetype (common conventions)
------------------------------------------------------------
-api.nvim_create_autocmd("FileType", {
-  pattern = {
-    "json",
-    "jsonc",
-    "yaml",
-    "yml",
-    "toml",
-    "typescript",
-    "typescriptreact",
-    "javascript",
-    "javascriptreact",
-    "html",
-    "css",
-    "scss",
-    "lua",
-    "helm",
-  },
-  callback = function()
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.tabstop = 2
-    vim.opt_local.softtabstop = 2
-  end,
-})
-
------------------------------------------------------------
+-- --------------------------------------------------------------------
 -- UI / layout
------------------------------------------------------------
-opt.number = true -- absolute line numbers
-opt.relativenumber = true -- relative numbers for motions
-opt.cursorline = true -- highlight current line
-opt.signcolumn = "yes" -- never hide git/diagnostic signs
+-- --------------------------------------------------------------------
+opt.number = true
+opt.relativenumber = true
+opt.cursorline = true
+opt.signcolumn = "yes"
 
-opt.wrap = false -- no soft wrap by default
-opt.scrolloff = 4 -- keep context above/below cursor
+opt.wrap = false
+opt.scrolloff = 4
 opt.sidescrolloff = 8
+opt.splitright = true
+opt.splitbelow = true
 
-opt.splitright = true -- vertical splits open to the right
-opt.splitbelow = true -- horizontal splits open below
+opt.termguicolors = true
+opt.showmode = false
 
-opt.termguicolors = true -- true color
-opt.showmode = false -- don't show -- INSERT -- (statusline handles it)
-
------------------------------------------------------------
+-- --------------------------------------------------------------------
 -- Searching
------------------------------------------------------------
-opt.ignorecase = true -- ignore case by default
-opt.smartcase = true -- but be case-sensitive if pattern has capitals
-opt.hlsearch = true -- highlight search results
-opt.incsearch = true -- show matches as you type
+-- --------------------------------------------------------------------
+opt.ignorecase = true
+opt.smartcase = true
+opt.hlsearch = true
+opt.incsearch = true
 
------------------------------------------------------------
+-- --------------------------------------------------------------------
 -- Files, backup, undo
------------------------------------------------------------
-opt.undofile = true -- persistent undo across sessions
-opt.swapfile = false -- don't use swapfiles (LazyVim friendly)
+-- --------------------------------------------------------------------
+opt.undofile = true
+opt.swapfile = false
 opt.backup = false
 opt.writebackup = false
 
------------------------------------------------------------
+-- Allows switching buffers without saving every time
+opt.hidden = true
+
+-- --------------------------------------------------------------------
 -- Timing / responsiveness
------------------------------------------------------------
-opt.updatetime = 200 -- faster CursorHold, diagnostics, etc.
-opt.timeoutlen = 300 -- shorter mapped sequence timeout
+-- --------------------------------------------------------------------
+opt.updatetime = 200
+opt.timeoutlen = 300
 
------------------------------------------------------------
+-- --------------------------------------------------------------------
+-- Clipboard (guard for SSH / remote)
+-- --------------------------------------------------------------------
+-- Over SSH, using the system clipboard can be slow/broken depending on setup.
+opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
+
+-- --------------------------------------------------------------------
 -- Misc
------------------------------------------------------------
-opt.clipboard = "unnamedplus" -- use system clipboard
-opt.mouse = "a" -- enable mouse in all modes
-opt.confirm = true -- confirm instead of error on unsaved changes
+-- --------------------------------------------------------------------
+opt.mouse = "a"
+opt.confirm = true
 
--- Make whitespace slightly more visible (without being obnoxious)
+-- Subtle whitespace visibility
 opt.list = true
 opt.listchars = {
   tab = "» ",
