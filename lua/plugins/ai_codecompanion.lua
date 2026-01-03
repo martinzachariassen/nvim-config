@@ -188,13 +188,13 @@ return {
         qwen_big = function()
           return require("codecompanion.adapters").extend("ollama", {
             name = "qwen_big",
-            schema = { model = { default = "qwen2.5-coder:14b" } },
+            schema = { model = { default = "qwen3-coder:30b" } },
           })
         end,
         qwen_small = function()
           return require("codecompanion.adapters").extend("ollama", {
             name = "qwen_small",
-            schema = { model = { default = "qwen2.5-coder:3b" } },
+            schema = { model = { default = "qwen2.5-coder:14b" } },
           })
         end,
       },
