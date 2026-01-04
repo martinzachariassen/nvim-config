@@ -71,7 +71,7 @@ opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
 -- --------------------------------------------------------------------
 -- Misc
 -- --------------------------------------------------------------------
-opt.mouse = "a"
+opt.mouse = ""
 opt.confirm = true
 
 -- Subtle whitespace visibility
