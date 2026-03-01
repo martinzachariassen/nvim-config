@@ -1,7 +1,4 @@
--- ====================================================================
--- Formatting: Java (LazyVim + conform.nvim) — best-effort, quiet on invalid code
--- ====================================================================
-
+-- lua/plugins/formatting_java.lua
 return {
   {
     "stevearc/conform.nvim",
@@ -13,37 +10,12 @@ return {
       opts.notify_no_formatters = false
 
       opts.default_format_opts = vim.tbl_deep_extend("force", opts.default_format_opts, {
-        lsp_format = "fallback",
+        timeout_ms = 3000,
         quiet = true,
+        lsp_format = "fallback",
       })
 
       opts.formatters_by_ft.java = { "google-java-format" }
-    end,
-  },
-
-  {
-    "LazyVim/LazyVim",
-    opts = function(_, opts)
-      opts.format = opts.format or {}
-
-      opts.format.on_save = function(bufnr)
-        -- only apply for java
-        if vim.bo[bufnr].filetype ~= "java" then
-          return true
-        end
-
-        local has_errors = #vim.diagnostic.get(bufnr, { severity = vim.diagnostic.severity.ERROR }) > 0
-
-        if has_errors then
-          return false
-        end
-
-        return {
-          timeout_ms = 800,
-          quiet = true,
-          lsp_format = "fallback",
-        }
-      end
     end,
   },
 }

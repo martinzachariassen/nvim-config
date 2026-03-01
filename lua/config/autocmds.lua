@@ -104,3 +104,43 @@ api.nvim_create_autocmd("BufWritePre", {
   end,
   desc = "Trim trailing whitespace on save",
 })
+
+-- --------------------------------------------------------------------
+-- Java: skip autoformat-on-save when buffer has ERROR diagnostics
+-- --------------------------------------------------------------------
+api.nvim_create_autocmd("BufWritePre", {
+  group = augroup("UserJavaSkipAutoformatOnError"),
+  callback = function(event)
+    if vim.bo[event.buf].filetype ~= "java" then
+      return
+    end
+
+    -- Respect explicit disable (<leader>uf or manual vim.b.autoformat=false)
+    if vim.b[event.buf].autoformat == false then
+      return
+    end
+
+    local errs = vim.diagnostic.get(event.buf, { severity = vim.diagnostic.severity.ERROR })
+    if #errs > 0 then
+      -- temporarily disable autoformat for this save
+      vim.b[event.buf]._autoformat_restore = vim.b[event.buf].autoformat
+      vim.b[event.buf].autoformat = false
+    end
+  end,
+  desc = "Disable autoformat on save for Java when diagnostics contain ERROR",
+})
+
+api.nvim_create_autocmd("BufWritePost", {
+  group = augroup("UserJavaRestoreAutoformatAfterSave"),
+  callback = function(event)
+    if vim.bo[event.buf].filetype ~= "java" then
+      return
+    end
+
+    if vim.b[event.buf]._autoformat_restore ~= nil then
+      vim.b[event.buf].autoformat = vim.b[event.buf]._autoformat_restore
+      vim.b[event.buf]._autoformat_restore = nil
+    end
+  end,
+  desc = "Restore autoformat setting after save (Java)",
+})
