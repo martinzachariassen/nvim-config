@@ -1,6 +1,26 @@
-# nvim-config
+<div align="center">
 
-Personal Neovim configuration built on [LazyVim](https://lazyvim.org) with AI tools, multi-language LSP, and a clean developer workflow.
+```
+███╗   ██╗██╗   ██╗██╗███╗   ███╗
+████╗  ██║██║   ██║██║████╗ ████║
+██╔██╗ ██║██║   ██║██║██╔████╔██║
+██║╚██╗██║╚██╗ ██╔╝██║██║╚██╔╝██║
+██║ ╚████║ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚═╝  ╚═══╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
+```
+
+**Personal Neovim configuration — fast, focused, AI-augmented.**
+
+[![Neovim](https://img.shields.io/badge/Neovim-%3E%3D0.10-57A143?style=flat-square&logo=neovim&logoColor=white)](https://neovim.io)
+[![LazyVim](https://img.shields.io/badge/LazyVim-v8-7B68EE?style=flat-square)](https://lazyvim.org)
+[![Lua](https://img.shields.io/badge/Lua-5.1-2C2D72?style=flat-square&logo=lua&logoColor=white)](https://www.lua.org)
+[![macOS](https://img.shields.io/badge/macOS-only-000000?style=flat-square&logo=apple&logoColor=white)](https://www.apple.com/macos)
+
+</div>
+
+---
+
+Built on [LazyVim](https://lazyvim.org) with local AI (Ollama), GitHub Copilot, multi-language LSP, and a clean developer workflow.
 
 ---
 
